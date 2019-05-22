@@ -62,18 +62,18 @@ int loadTag(string file_name, Graph<POI> *map) {
 
 				if (tag == "tourism=information") {
 
-					cout << "\nsetting poi1 info to true \n";
+					//cout << "\nsetting poi1 info to true \n";
 
-					cout << "\nHEREEEEEErrrr " << map->findVertex(poi1)->getInfo()->isInfo() << endl;
+					//cout << "\nHEREEEEEErrrr " << map->findVertex(poi1)->getInfo()->isInfo() << endl;
 					map->findVertex(poi1)->getInfo()->enableInformation();
 					
 					map->findVertex(poi1)->getInfo()->enableInformation();
-					cout << "\nHEREEEEEE ";
-					if(!map->findVertex(poi1)->getInfo()->isInfo())
+					//cout << "\nHEREEEEEE ";
+					/*if(!map->findVertex(poi1)->getInfo()->isInfo())
 						cout << "Not here tho" << endl;
 					else
 						cout << "here too" << endl;
-
+						*/
 					//cout << "Vertex id: " << map->findVertex(poi1)->getInfo().getId();
 
 					//cout << "\nHEREEEEEE " << map->findVertex(poi)->getInfo().getAmmenities() << endl;
@@ -122,9 +122,9 @@ int loadTag(string file_name, Graph<POI> *map) {
 
 			if (r_content == "tourism=information") {
 
-				cout << "HERE info\n";
+				//cout << "HERE info\n";
 				tag = "tourism=information";
-				cout << "Tag set to: " << tag << endl;
+				//cout << "Tag set to: " << tag << endl;
 			}
 			else if (r_content == "tourism=hotel") {
 
@@ -341,17 +341,6 @@ void loadMap (){
 		cout << "\nVertex set is empty, loadNodes failed.\n";
 
 
-	POI poi(497922579);
-
-	Vertex<POI> *v = map.findVertex(poi);
-
-
-	v->getInfo()->displayAllInfo();
-
-	v->getInfo()->enableInformation();
-
-	v->getInfo()->displayAllInfo();
-
 
 	//cout << "\nX: \n" << map.findVertex(poi)->getInfo().getX();
 
@@ -359,9 +348,24 @@ void loadMap (){
 
 	cout << endl << "\nName of Tag file? ";
 	cin >> tag_file;
-	//loadTag(tag_file, &map);
+	loadTag(tag_file, &map);
 
 	
+	/*
+	POI poi(414957020);
+
+	Vertex<POI> *v = map.findVertex(poi);
+
+
+	v->getInfo()->displayAllInfo();*/
+
+
+
+	//v->getInfo()->enableInformation();
+
+	//v->getInfo()->displayAllInfo();
+
+
 	/*
 	int index = 0;
 	while (true) {
