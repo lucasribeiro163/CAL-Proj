@@ -37,7 +37,7 @@ class Vertex {
 public:
 	Vertex(T in);
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
-	T getInfo() const;
+	T* getInfo();
 	double getDist() const;
 
 	Edge<T> getEdgeAt(int i) const;
@@ -70,8 +70,8 @@ bool Vertex<T>::operator<(Vertex<T> & vertex) const {
 }
 
 template <class T>
-T Vertex<T>::getInfo() const {
-	return this->info;
+T* Vertex<T>::getInfo() {
+	return &info;
 }
 
 template <class T>
