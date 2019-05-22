@@ -8,9 +8,6 @@
 #include "Passenger.h"
 
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
-
-
 
 using namespace std;
 

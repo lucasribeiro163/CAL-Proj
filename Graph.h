@@ -12,8 +12,6 @@
 #include "MutablePriorityQueue.h"
 
 
- //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
-
 
 
 using namespace std;

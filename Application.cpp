@@ -22,15 +22,96 @@
 #include <cctype>
 
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
-
-
 using namespace std;
+
+
+/*
+Next step is to go trough all the pois in the passengers lists, and make sure more than half
+the passengers have a poi, if so had it to a list , then that is a list that has to be used for the route creation
+*/
+
+vector<Passenger> passengers;
+vector<Bus> buses;
+
+
 
 #define MAIN_MENU 0
 #define MAP_LOADER_SUBMENU 1
+#define PASSENGER_LOADER_SUBMENU 2
 
 
+string parseId(string line) {
+
+	int element = 0;
+	string ret;
+
+	for (unsigned int i = 0; i < line.length(); i++) {
+
+		if (isdigit(line.at(i))) {
+			ret.push_back(line[i]);
+		}
+
+	}
+
+	cout << "HERE BITCH " <<ret << endl;
+
+	return ret;
+}
+
+int loadPassengers() {
+
+	string passenger_file;
+
+	cout << endl << "Name of Passenger file? ";
+	cin >> passenger_file;
+
+	string r_content;
+	fstream infile;
+	infile.open(passenger_file + ".txt");
+
+	if (!infile)
+	{
+		cout << "\nError reading Passenger file!\n";
+		return 1;
+	}
+	else
+	{
+		cout << "\nReading from Passenger file...\n";
+
+		bool first_line = true;
+
+		Passenger pass;
+
+		while (getline(infile, r_content)) {
+
+			if (r_content[0] == 'i') {
+
+				if (!first_line)
+					passengers.push_back(pass);
+				else
+					first_line = false;
+
+				pass.setId(stoi(parseId(r_content)));
+			}
+
+			else {
+				pass.addNode(stoi(r_content));
+			}
+
+
+		}
+
+	}
+	/*
+	if (!passengers.empty()) {
+		cout << "NOT EMPTY: ";
+		passengers.at(0).printNodes();
+	}*/
+
+
+	return 0;
+
+}
 
 int loadTag(string file_name, Graph<POI> *map) {
 
@@ -433,9 +514,9 @@ int main(){
 
 
 			if(!POI_loaded)
-				cout<<"| 2 - Load POI's\n";
+				cout<<"| 2 - Load Passengers info\n";
 			else
-				cout<<"| 2 - Reload POI's\n";
+				cout<<"| 2 - Reload Passengers info\n";
 
 			if(!PassList_loaded)
 				cout<<"| 3 - Load Passenger list w/ respective POI's\n";
@@ -459,6 +540,9 @@ int main(){
 
 			if(option ==1)
 				Displayed_screen = MAP_LOADER_SUBMENU;
+
+			else if (option == 2)
+				Displayed_screen = PASSENGER_LOADER_SUBMENU;
 		}
 
 		if(Displayed_screen == MAP_LOADER_SUBMENU){
@@ -466,7 +550,7 @@ int main(){
 
 			cout<<"----------City Sightseeing - Load Map -------------";
 
-			cout << "2\n\n\n _\n";
+			cout << "\n\n\n _\n";
 
 			cout<<"| 1 - Select files\n";
 
@@ -487,6 +571,34 @@ int main(){
 
 			}
 				
+
+
+
+		}
+
+		if (Displayed_screen == PASSENGER_LOADER_SUBMENU) {
+
+
+			cout << "----------City Sightseeing - Load Passenger -------------";
+
+			cout << "\n\n\n _\n";
+
+			cout << "| 1 - Select files\n";
+
+			cout << "| 2 - Back\n";
+
+			cout << "|_\n\nEnter one of the options above: ";
+
+			cin >> option;
+
+			if (option == 1) {
+
+				loadPassengers();
+
+
+
+			}
+
 
 
 

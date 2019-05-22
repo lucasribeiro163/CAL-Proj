@@ -7,8 +7,6 @@
 //#include "Graph.h"
 
 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx
-
 
 using namespace std;
 
@@ -43,6 +41,8 @@ public:
 
 	int getId();
 	void addNode(int node);
+	void setId(int id);
+	void printNodes();
 
 };
 
@@ -80,6 +80,26 @@ void Passenger::addNode(int node) {
 
 
 }
+
+
+void Passenger::setId(int id) {
+
+	this->id = id;
+
+}
+
+void Passenger::printNodes() {
+
+	cout << "Nodes of " << this->id << ": \n";
+
+	for (int i = 0; i < this->nodes.size(); i++) {
+
+		cout << this->nodes.at(i) << endl;
+
+	}
+
+}
+
 
 
 
