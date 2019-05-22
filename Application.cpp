@@ -24,6 +24,161 @@ using namespace std;
 #define MAIN_MENU 0
 #define MAP_LOADER_SUBMENU 1
 
+
+
+int loadTag(string file_name, Graph<POI> *map) {
+
+	string r_content;
+	fstream infile;
+	infile.open(file_name + ".txt");
+	if (!infile)
+	{
+		cout << "\nError reading Tag file!";
+		return 1;
+	}
+	else
+	{
+		cout << "\nReading from Tag file...\n";
+
+		int bota = 200;
+
+		string tag = "Vazio ";
+		int tag_num = 0;
+
+		while (getline(infile, r_content)) {
+
+
+
+
+			if (tag_num > 0) {
+
+
+
+				POI poi1(stoi(r_content));
+
+				/*
+				POI poi(497922579);
+				cout << "HEREEEEEE " << map->findVertex(poi)->getInfo().getAmmenities() << endl;*/
+
+				if (tag == "tourism=information") {
+
+					cout << "\nsetting poi1 info to true \n";
+
+					cout << "\nHEREEEEEErrrr " << map->findVertex(poi1)->getInfo().isInfo() << endl;
+					map->findVertex(poi1)->getInfo().enableInformation();
+					
+					map->findVertex(poi1)->getInfo().enableInformation();
+					cout << "\nHEREEEEEE ";
+					if(!map->findVertex(poi1)->getInfo().isInfo())
+						cout << "Not here tho" << endl;
+					else
+						cout << "here too" << endl;
+
+					//cout << "Vertex id: " << map->findVertex(poi1)->getInfo().getId();
+
+					//cout << "\nHEREEEEEE " << map->findVertex(poi)->getInfo().getAmmenities() << endl;
+				}
+
+				else if (tag == "tourism=hotel")
+					map->findVertex(poi1)->getInfo().enableHotel();
+
+				else if (tag == "tourism=attraction")
+					map->findVertex(poi1)->getInfo().enableAttraction();
+
+				else if (tag == "tourism=viewpoint")
+					map->findVertex(poi1)->getInfo().enableViewpoint();
+
+				else if (tag == "tourism=guest_house")
+					map->findVertex(poi1)->getInfo().enableGuest();
+
+				else if (tag == "tourism=picnic_site")
+					map->findVertex(poi1)->getInfo().enablePicnic();
+
+				else if (tag == "tourism=artwork")
+					map->findVertex(poi1)->getInfo().enableArtwork();
+
+				else if (tag == "tourism=camp_site")
+					map->findVertex(poi1)->getInfo().enableCamp();
+
+				else if (tag == "tourism=museum")
+					map->findVertex(poi1)->getInfo().enableMuseum();
+
+				else if (tag == "tourism=*")
+					map->findVertex(poi1)->getInfo().enableAst();
+
+
+				tag_num--;
+
+				if (tag_num == 0)
+					tag = "Vazio ";
+			}
+
+
+			if (tag_num == 0 && tag != "Vazio ") {
+
+				tag_num = stoi(r_content);
+
+			}
+
+			if (r_content == "tourism=information") {
+
+				cout << "HERE info\n";
+				tag = "tourism=information";
+				cout << "Tag set to: " << tag << endl;
+			}
+			else if (r_content == "tourism=hotel") {
+
+				tag = "tourism=hotel";
+			}
+			else if (r_content == "tourism=attraction") {
+
+				tag = "tourism=attraction";
+			}
+			else if (r_content == "tourism=viewpoint") {
+
+				tag = "tourism=viewpoint";
+			}
+			else if (r_content == "tourism=guest_house") {
+
+				tag = "tourism=guest_house";
+			}
+			else if (r_content == "tourism=picnic_site") {
+
+				tag = "tourism=picnic_site";
+			}
+			else if (r_content == "tourism=artwork") {
+
+				tag = "tourism=artwork";
+			}
+			else if (r_content == "tourism=camp_site") {
+
+				tag = "tourism=camp_site";
+			}
+			else if (r_content == "tourism=museum") {
+
+				tag = "tourism=museum";
+			}
+			else if (r_content == "tourism=*") {
+
+				tag = "tourism=*";
+			}
+
+			
+
+			
+
+		}
+
+
+
+		infile.close();
+	}
+	cout << "\nFinished reading Tags.\n";
+
+
+	return 0;
+}
+
 double distance(POI x, POI y) {
 
 	double x1 = y.getX();
@@ -35,7 +190,6 @@ double distance(POI x, POI y) {
 
 
 }
-
 
 void parseEdgeline(string line, string ret[3]) {
 
@@ -55,8 +209,7 @@ void parseEdgeline(string line, string ret[3]) {
 
 }
 
-
-int loadEdges(string file_name, Graph<POI> map) {
+int loadEdges(string file_name, Graph<POI> *map) {
 
 	string r_content;
 	fstream infile;
@@ -88,10 +241,10 @@ int loadEdges(string file_name, Graph<POI> map) {
 
 			
 
-			POI poi = map.findVertex(poi1)->getInfo();
+			POI poi = map->findVertex(poi1)->getInfo();
 
 
-			if (!map.addEdge(map.findVertex(poi1)->getInfo(), map.findVertex(poi2)->getInfo(), distance(map.findVertex(poi1)->getInfo(), map.findVertex(poi2)->getInfo())))
+			if (!map->addEdge(map->findVertex(poi1)->getInfo(), map->findVertex(poi2)->getInfo(), distance(map->findVertex(poi1)->getInfo(), map->findVertex(poi2)->getInfo())))
 				cout << "Source or destination vertex doesnt exist";
 
 			//cout << "Sai do stod:" << stoi(ret[0]) << " e " << stod(ret[1]) << " e " << stod(ret[2]) << endl;
@@ -127,7 +280,6 @@ void parseNodeline(string line, string ret[3]) {
 	}
 
 }
-
 
 int loadNodes(string file_name, Graph<POI> *map) {
 
@@ -174,33 +326,50 @@ int loadNodes(string file_name, Graph<POI> *map) {
 	return 0;
 }
 
-
 void loadMap (){
-
 
 	string node_file;
 	string edge_file;
+	string tag_file;
 	Graph<POI> map;
 	
 	cout << endl << "Name of Node file? ";
 	cin >> node_file;
 	loadNodes(node_file, &map);
 
-
 	if (map.getVertexSet().empty())
 		cout << "\nVertex set is empty, loadNodes failed.\n";
 
+
+	cout << endl << "\nName of Tag file? ";
+	cin >> tag_file;
+	loadTag(tag_file, &map);
+
+
+
+	int index = 0;
+	while (true) {
+
+		cout << "Ammenitiesss of: ";
+		string ret = "Esta aqui: ";
+		cin >> index;
+		POI poi1(index);
+		ret += map.findVertex(poi1)->getInfo().getAmmenities();
+		cout << "\nAmmenitiesss: " << ret << endl << endl;
+
+	}
+
 	cout << endl << "\nName of Edge file? ";
 	cin >> edge_file;
-	loadEdges(edge_file, map);
+	loadEdges(edge_file, &map);
 
+	/*
+	cout << "PESOOOOOOOOOOOOOOOOO: ";
+	Edge<POI> e = map.getVertexSet().at(23)-> getEdgeAt(0);
+	cout << "PESOOOOOOOOOOOOOOOOO: " << e.getWeight();*/
 
-	
 
 }
-
-
-
 
 
 int main(){

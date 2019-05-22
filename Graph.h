@@ -39,6 +39,8 @@ public:
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	T getInfo() const;
 	double getDist() const;
+
+	Edge<T> getEdgeAt(int i) const;
 	Vertex *getPath() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
@@ -55,6 +57,11 @@ Vertex<T>::Vertex(T in): info(in) {}
 template <class T>
 void Vertex<T>::addEdge(Vertex<T> *d, double w) {
 	adj.push_back(Edge<T>(d, w));
+}
+
+template <class T>
+Edge<T> Vertex<T>::getEdgeAt(int i) const{
+	return this->adj.at(i);
 }
 
 template <class T>
@@ -85,12 +92,19 @@ class Edge {
 	double weight;         // edge weight
 public:
 	Edge(Vertex<T> *d, double w);
+	double getWeight();
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
 
 template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
+
+
+template <class T>
+double Edge<T>::getWeight() {
+	return this->weight;
+}
 
 
 /*************************** Graph  **************************/
