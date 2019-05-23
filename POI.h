@@ -13,7 +13,7 @@ class POI {
 	int id;
 	double x;
 	double y;
-	int people_interested = 0;
+	int people_interested;
 
 
 	bool information;
@@ -89,11 +89,13 @@ POI::POI() {
 	this->camp = false;
 	this->museum = false;
 	this->ast = false;
+	this->people_interested = 0;
 };
 
 POI::POI(int id) {
 
 
+	this->people_interested = 0;
 
 	this->id = id;
 	this->information = false;
@@ -109,6 +111,7 @@ POI::POI(int id) {
 };
 
 POI::POI(int id, double x, double y) {
+	this->people_interested = 0;
 
 
 
@@ -261,6 +264,8 @@ void POI::displayAllInfo() {
 
 	cout << "Y coord: " << setprecision(10) << this->y << endl;
 
+	cout << "People Interested: " << this->people_interested << endl;
+
 	cout << "Information: ";
 
 	if (information)
@@ -289,7 +294,10 @@ void POI::displayAllInfo() {
 
 void POI::addInterested() {
 
+	cout << "\n incrementing \n";
 	people_interested++;
+
+	cout << "\n incremented \n";
 
 }
 

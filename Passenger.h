@@ -93,9 +93,13 @@ void Passenger::setId(int id) {
 
 void Passenger::printNodes() {
 
-	cout << "Nodes of " << this->id << ": \n";
 
-	for (int i = 0; i < this->nodes.size(); i++) {
+	cout << "\nNodes of " << this->id << ": \n";
+
+	if (this->nodes.empty())
+		cout << "\nNodes vector is empty\n";
+
+	for (unsigned int i = 0; i < this->nodes.size(); i++) {
 
 		cout << this->nodes.at(i) << endl;
 

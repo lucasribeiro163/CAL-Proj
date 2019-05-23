@@ -30,8 +30,8 @@ Next step is to go trough all the pois in the passengers lists, and make sure mo
 the passengers have a poi, if so had it to a list , then that is a list that has to be used for the route creation
 */
 
-vector<Passenger> pending_pass;
-vector<Bus> buses;
+vector<Passenger*> pending_pass;
+vector<Bus*> buses;
 vector<vector<Vertex<POI>*>> pending_routes;
 
 
@@ -44,30 +44,78 @@ vector<vector<Vertex<POI>*>> pending_routes;
 
 
 
+
+void determineInterest(Graph<POI> *map) {
+
+	for (unsigned int i = 0; i < pending_pass.size(); i++) {
+
+		for (unsigned int j = 0; j < pending_pass.at(i)->getNodes()->size(); j++) {
+
+			POI poi1(pending_pass.at(i)->getNodes()->at(j));
+
+
+
+			cout << "\n111111111111111111111111\n";
+			map->findVertex(poi1)->getInfo();
+			cout << "\n22222222222222222222221\n";
+
+
+			cout << map->findVertex(poi1)->getInfo()->getId();
+
+			map->findVertex(poi1)->getInfo()->addInterested();
+
+			cout << "\n33333333333333333333\n";
+
+		}
+
+
+	}
+
+
+}
+
+
+
 void addNextRoute(Graph<POI> *map) {
+
+	cout << "\nDetermining Interest...\n";
 
 
 	determineInterest(map);
 
 	int nextIndex = 0;
 
-	for (int x = 0; x < pending_routes.size(); x++) {
-	
+
+	cout << "\nAccessing route slot...\n";
+
+	for (unsigned int x = 0; x < pending_routes.size(); x++) {
+
 		if (!pending_routes.at(x).empty())
 			nextIndex++;
-	
-	
+
+
 	}
 
-	for (int i = 0; i < pending_pass.size(); i++) {
 
-		for (int j = 0; j < pending_pass.at(i).getNodes()->size(); j++) {
+	cout << "\nDetermining route points...\n";
+
+	for (unsigned int i = 0; i < pending_pass.size(); i++) {
 
 
-			POI poi1(pending_pass.at(i).getNodes()->at(j));
+		cout << "\nPending passenger: " << i ;
 
-			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7)
+		for (unsigned int j = 0; j < pending_pass.at(i)->getNodes()->size(); j++) {
+
+
+			cout << "\nPassenger Node nr: " << j;
+
+
+			POI poi1(pending_pass.at(i)->getNodes()->at(j));
+
+			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7) {
+				cout << "POI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
 				pending_routes.at(nextIndex).push_back(map->findVertex(poi1));
+			}
 
 		}
 
@@ -75,29 +123,11 @@ void addNextRoute(Graph<POI> *map) {
 	}
 
 
-}
-
-
-
-void determineInterest(Graph<POI> *map) {
-
-	for (int i = 0; i < pending_pass.size(); i++) {
-
-		for (int j = 0; j < pending_pass.at(i).getNodes()->size(); j++) {
-
-
-			POI poi1(pending_pass.at(i).getNodes()->at(j));
-
-
-			map->findVertex(poi1)->getInfo()->addInterested();
-
-		}
-
-
-	}
+	cout << "\nPOIs determined.\n";
 
 
 }
+
 
 void addBus() {
 
@@ -106,13 +136,15 @@ void addBus() {
 	cout << "\nEnter bus Id? ";
 	cin >> busId;
 
-	Bus bus;
 
-	bus.setId(busId);
+	Bus* bus = new Bus(busId);
+
 
 	buses.push_back(bus);
 
+
 	cout << "\n Added bus of Id=" << busId << ".\n";
+
 
 
 }
@@ -157,7 +189,7 @@ int loadPassengers() {
 
 		bool first_line = true;
 
-		Passenger pass;
+		Passenger* pass = new Passenger();
 
 		while (getline(infile, r_content)) {
 
@@ -168,22 +200,26 @@ int loadPassengers() {
 				else
 					first_line = false;
 
-				pass.setId(stoi(parseId(r_content)));
+
+				pass = new Passenger();
+				pass->setId(stoi(parseId(r_content)));
 			}
 
 			else {
-				pass.addNode(stoi(r_content));
+				pass->addNode(stoi(r_content));
 			}
-
 
 		}
 
 	}
-	/*
-	if (!passengers.empty()) {
-		cout << "NOT EMPTY: ";
-		passengers.at(0).printNodes();
-	}*/
+	
+	if (!pending_pass.empty()) {
+		pending_pass.at(1)->printNodes();
+
+		cout << endl << pending_pass.at(0)->getId() << endl;
+
+		cout << endl << pending_pass.at(1)->getId() << endl;
+	}
 
 
 	return 0;
@@ -634,6 +670,8 @@ int main(){
 			else if (option == 3)
 				Displayed_screen = BUS_ADDER_MENU;
 
+			//OPTION 4 route adder
+
 			else if (option == 4) {
 
 
@@ -720,6 +758,10 @@ int main(){
 
 			if (option == 1)
 				addBus();
+
+
+			cout << "BUS: " << buses.at(0)->getId() << endl;
+
 
 			
 
