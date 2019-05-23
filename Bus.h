@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "Graph.h"
+#include "POI.h"
 #include "Passenger.h"
 
 
@@ -14,6 +15,7 @@ using namespace std;
 class Bus {
 	int id;
 	vector<Passenger> passengers;
+	vector<POI> route;
 
 
 public:
@@ -41,7 +43,9 @@ public:
 	}
 
 	int getId();
+	void setId(int id);
 	void addPassenger(Passenger *passenger);
+	void addToRoute(POI *poi);
 
 };
 
@@ -77,10 +81,23 @@ void Bus::addPassenger(Passenger *passenger){
 
 	this->passengers.push_back(*passenger);
 
+}
 
+
+void Bus::setId(int id) {
+
+	this->id = id;
 
 }
 
+
+
+void Bus::addToRoute(POI *poi) {
+
+	route.push_back(*poi);
+
+
+}
 
 
 

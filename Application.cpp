@@ -30,15 +30,92 @@ Next step is to go trough all the pois in the passengers lists, and make sure mo
 the passengers have a poi, if so had it to a list , then that is a list that has to be used for the route creation
 */
 
-vector<Passenger> passengers;
+vector<Passenger> pending_pass;
 vector<Bus> buses;
+vector<vector<Vertex<POI>*>> pending_routes;
 
 
 
 #define MAIN_MENU 0
 #define MAP_LOADER_SUBMENU 1
 #define PASSENGER_LOADER_SUBMENU 2
+#define BUS_ADDER_MENU 3
 
+
+
+
+void addNextRoute(Graph<POI> *map) {
+
+
+	determineInterest(map);
+
+	int nextIndex = 0;
+
+	for (int x = 0; x < pending_routes.size(); x++) {
+	
+		if (!pending_routes.at(x).empty())
+			nextIndex++;
+	
+	
+	}
+
+	for (int i = 0; i < pending_pass.size(); i++) {
+
+		for (int j = 0; j < pending_pass.at(i).getNodes()->size(); j++) {
+
+
+			POI poi1(pending_pass.at(i).getNodes()->at(j));
+
+			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7)
+				pending_routes.at(nextIndex).push_back(map->findVertex(poi1));
+
+		}
+
+
+	}
+
+
+}
+
+
+
+void determineInterest(Graph<POI> *map) {
+
+	for (int i = 0; i < pending_pass.size(); i++) {
+
+		for (int j = 0; j < pending_pass.at(i).getNodes()->size(); j++) {
+
+
+			POI poi1(pending_pass.at(i).getNodes()->at(j));
+
+
+			map->findVertex(poi1)->getInfo()->addInterested();
+
+		}
+
+
+	}
+
+
+}
+
+void addBus() {
+
+	int busId;
+
+	cout << "\nEnter bus Id? ";
+	cin >> busId;
+
+	Bus bus;
+
+	bus.setId(busId);
+
+	buses.push_back(bus);
+
+	cout << "\n Added bus of Id=" << busId << ".\n";
+
+
+}
 
 string parseId(string line) {
 
@@ -87,7 +164,7 @@ int loadPassengers() {
 			if (r_content[0] == 'i') {
 
 				if (!first_line)
-					passengers.push_back(pass);
+					pending_pass.push_back(pass);
 				else
 					first_line = false;
 
@@ -425,18 +502,17 @@ int loadNodes(string file_name, Graph<POI> *map) {
 	return 0;
 }
 
-void loadMap (){
+void loadMap (Graph<POI> *map){
 
 	string node_file;
 	string edge_file;
 	string tag_file;
-	Graph<POI> map;
 	
 	cout << endl << "Name of Node file? ";
 	cin >> node_file;
-	loadNodes(node_file, &map);
+	loadNodes(node_file, map);
 
-	if (map.getVertexSet().empty())
+	if (map->getVertexSet().empty())
 		cout << "\nVertex set is empty, loadNodes failed.\n";
 
 
@@ -447,7 +523,7 @@ void loadMap (){
 
 	cout << endl << "\nName of Tag file? ";
 	cin >> tag_file;
-	loadTag(tag_file, &map);
+	loadTag(tag_file, map);
 
 	
 	/*
@@ -480,7 +556,7 @@ void loadMap (){
 
 	cout << endl << "\nName of Edge file? ";
 	cin >> edge_file;
-	loadEdges(edge_file, &map);
+	loadEdges(edge_file, map);
 
 	/*
 	cout << "PESOOOOOOOOOOOOOOOOO: ";
@@ -502,6 +578,9 @@ int main(){
 		bool POI_loaded = false;
 		bool PassList_loaded = false;
 		int Displayed_screen = MAIN_MENU;
+
+
+		Graph<POI> map;
 
 
 		if(Displayed_screen == MAIN_MENU){
@@ -530,13 +609,9 @@ int main(){
 			else
 				cout<<"| 2 - Reload Passengers info\n";
 
-			if(!PassList_loaded)
-				cout<<"| 3 - Load Passenger list w/ respective POI's\n";
-			else
-				cout<<"| 3 - Reload  Passenger list w/ respective POI's\n";
+			cout<<"| 3 - Add bus\n";
 
-
-			cout<<"| 4 - View Map\n";
+			cout<<"| 4 - Determine what POI's must be visited\n";
 
 			cout<<"| 4 - View Accessible POI's\n";
 
@@ -555,6 +630,18 @@ int main(){
 
 			else if (option == 2)
 				Displayed_screen = PASSENGER_LOADER_SUBMENU;
+
+			else if (option == 3)
+				Displayed_screen = BUS_ADDER_MENU;
+
+			else if (option == 4) {
+
+
+				addNextRoute(&map);
+
+
+			}
+
 		}
 
 		if(Displayed_screen == MAP_LOADER_SUBMENU){
@@ -574,7 +661,7 @@ int main(){
 
 			if (option == 1) {
 	
-				loadMap();
+				loadMap(&map);
 
 
 				/*string ret[2];
@@ -616,6 +703,30 @@ int main(){
 
 		}
 
+		if (Displayed_screen == BUS_ADDER_MENU) {
+
+
+			cout << "----------City Sightseeing - Add Bus -------------";
+
+			cout << "\n\n\n _\n";
+
+			cout << "| 1 - Enter Info\n";
+
+			cout << "| 2 - Back\n";
+
+			cout << "|_\n\nEnter one of the options above: ";
+
+			cin >> option;
+
+			if (option == 1)
+				addBus();
+
+			
+
+
+		}
+
+		
 
 	}
 

@@ -13,6 +13,7 @@ class POI {
 	int id;
 	double x;
 	double y;
+	int people_interested = 0;
 
 
 	bool information;
@@ -52,6 +53,7 @@ public:
 	double getX();
 	double getY();
 	int getId();
+
 	void enableInformation();
 	void enableHotel();
 	void enableAttraction();
@@ -66,6 +68,11 @@ public:
 	bool isInfo();
 
 	void displayAllInfo();
+
+	void addInterested();
+
+
+	int getInterest();
 
 };
 
@@ -280,7 +287,17 @@ void POI::displayAllInfo() {
 
 }
 
+void POI::addInterested() {
 
+	people_interested++;
+
+}
+
+int POI::getInterest() {
+
+	return this->people_interested;
+
+}
 
 
 

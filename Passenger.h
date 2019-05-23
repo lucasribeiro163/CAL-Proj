@@ -44,6 +44,9 @@ public:
 	void setId(int id);
 	void printNodes();
 
+	vector<int> *getNodes();
+
+
 };
 
 
@@ -97,6 +100,13 @@ void Passenger::printNodes() {
 		cout << this->nodes.at(i) << endl;
 
 	}
+
+}
+
+
+vector<int>* Passenger::getNodes() {
+
+	return &this->nodes;
 
 }
 
