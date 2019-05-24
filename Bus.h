@@ -46,6 +46,7 @@ public:
 	void setId(int id);
 	void addPassenger(Passenger *passenger);
 	void addToRoute(POI *poi);
+	bool isBeingUsed();
 
 };
 
@@ -100,6 +101,14 @@ void Bus::addToRoute(POI *poi) {
 }
 
 
+bool Bus::isBeingUsed() {
+
+	if (this->route.empty())
+		return false;
+	else
+		return true;
+	
+}
 
 
 #endif /*SRC_BUS_H_*/

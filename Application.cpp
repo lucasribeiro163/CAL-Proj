@@ -25,14 +25,10 @@
 using namespace std;
 
 
-/*
-Next step is to go trough all the pois in the passengers lists, and make sure more than half
-the passengers have a poi, if so had it to a list , then that is a list that has to be used for the route creation
-*/
 
 vector<Passenger*> pending_pass;
 vector<Bus*> buses;
-vector<vector<Vertex<POI>*>> pending_routes;
+vector<vector<Vertex<POI>*>*> pending_routes;
 
 
 
@@ -42,7 +38,16 @@ vector<vector<Vertex<POI>*>> pending_routes;
 #define BUS_ADDER_MENU 3
 
 
+//Bus* getNextUnusedBus()
 
+
+
+/*void distributeNextRouteToBus() {
+
+
+
+
+}*/
 
 
 void determineInterest(Graph<POI> *map) {
@@ -55,24 +60,29 @@ void determineInterest(Graph<POI> *map) {
 
 
 
+
+
 			cout << "\n111111111111111111111111\n";
 			map->findVertex(poi1)->getInfo();
 			cout << "\n22222222222222222222221\n";
 
 
-			cout << map->findVertex(poi1)->getInfo()->getId();
+			cout << map->findVertex(poi1)->getInfo()->getInterest();
+
+
+			cout << "\n33333333333333333333\n";
 
 			map->findVertex(poi1)->getInfo()->addInterested();
 
-			cout << "\n33333333333333333333\n";
 
 		}
 
 
 	}
 
-
 }
+
+
 
 
 
@@ -83,6 +93,9 @@ void addNextRoute(Graph<POI> *map) {
 
 	determineInterest(map);
 
+	
+
+
 	int nextIndex = 0;
 
 
@@ -90,7 +103,7 @@ void addNextRoute(Graph<POI> *map) {
 
 	for (unsigned int x = 0; x < pending_routes.size(); x++) {
 
-		if (!pending_routes.at(x).empty())
+		if (!pending_routes.at(x)->empty())
 			nextIndex++;
 
 
@@ -102,28 +115,55 @@ void addNextRoute(Graph<POI> *map) {
 	for (unsigned int i = 0; i < pending_pass.size(); i++) {
 
 
-		cout << "\nPending passenger: " << i ;
+		vector<Vertex<POI>*>* v = new vector<Vertex<POI>*>();
+
+		//cout << "\nPending passenger: " << i ;
 
 		for (unsigned int j = 0; j < pending_pass.at(i)->getNodes()->size(); j++) {
 
 
-			cout << "\nPassenger Node nr: " << j;
+			//cout << "\nPassenger Node nr: " << j;
 
 
 			POI poi1(pending_pass.at(i)->getNodes()->at(j));
 
 			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7) {
-				cout << "POI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
-				pending_routes.at(nextIndex).push_back(map->findVertex(poi1));
+				//cout << "\nPOI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
+
+
+				v->push_back(map->findVertex(poi1));
+
+
 			}
 
+
+			pending_routes.push_back(v);
+
+
+
+			
+
+			cout << "\nchega aqui\n";
+
 		}
+		/*
+		cout << "\nTESTTTT 1 na variavel local: \n";
+
+		for (unsigned int j = 0; j < v->size(); j++) {
+
+			cout << "Member of route" << v->at(j)->getInfo()->getId() << endl;
+
+
+		}
+		*/
 
 
 	}
 
 
 	cout << "\nPOIs determined.\n";
+
+
 
 
 }
@@ -220,6 +260,7 @@ int loadPassengers() {
 
 		cout << endl << pending_pass.at(1)->getId() << endl;
 	}
+
 
 
 	return 0;
@@ -376,10 +417,14 @@ int loadTag(string file_name, Graph<POI> *map) {
 		}
 
 
-
 		infile.close();
 	}
 	cout << "\nFinished reading Tags.\n";
+
+
+
+	//determineInterest(map);
+	//addNextRoute(map);
 
 
 	return 0;
@@ -466,7 +511,6 @@ int loadEdges(string file_name, Graph<POI> *map) {
 		}
 
 
-
 		infile.close();
 	}
 	cout << "\nFinished reading Edges.\n";
@@ -538,6 +582,22 @@ int loadNodes(string file_name, Graph<POI> *map) {
 	return 0;
 }
 
+
+
+void loadX(Graph<POI> *map) {
+
+
+	addNextRoute(map);
+
+
+
+
+}
+
+
+
+
+
 void loadMap (Graph<POI> *map){
 
 	string node_file;
@@ -557,9 +617,9 @@ void loadMap (Graph<POI> *map){
 
 
 
-	cout << endl << "\nName of Tag file? ";
-	cin >> tag_file;
-	loadTag(tag_file, map);
+	//cout << endl << "\nName of Tag file? ";
+	//cin >> tag_file;
+	//loadTag(tag_file, map);
 
 	
 	/*
@@ -590,9 +650,9 @@ void loadMap (Graph<POI> *map){
 
 	}*/
 
-	cout << endl << "\nName of Edge file? ";
-	cin >> edge_file;
-	loadEdges(edge_file, map);
+	//cout << endl << "\nName of Edge file? ";
+	//cin >> edge_file;
+	//loadEdges(edge_file, map);
 
 	/*
 	cout << "PESOOOOOOOOOOOOOOOOO: ";
@@ -604,20 +664,25 @@ void loadMap (Graph<POI> *map){
 
 
 int main(){
+
+
+	int option;
+
+	bool map_loaded = false;
+	bool POI_loaded = false;
+	bool PassList_loaded = false;
+
+
+	Graph<POI> map;
+
+
+
 	while(true){
 
 
 
-		int option;
 
-		bool map_loaded = false;
-		bool POI_loaded = false;
-		bool PassList_loaded = false;
 		int Displayed_screen = MAIN_MENU;
-
-
-		Graph<POI> map;
-
 
 		if(Displayed_screen == MAIN_MENU){
 			cout<<"----------City Sightseeing - Main Menu -------------";
@@ -677,6 +742,17 @@ int main(){
 
 				addNextRoute(&map);
 
+				/*
+				cout << "\nTESTTTT 2 na variavel global: \n";
+
+				for (unsigned int j = 0; j < pending_routes.at(0)->size(); j++) {
+
+					cout << "Member of route" << pending_routes.at(0)->at(j)->getInfo()->getId() << endl;
+
+
+				}
+				cout << "\nPOIs determined.\n";*/
+
 
 			}
 
@@ -707,6 +783,7 @@ int main(){
 
 
 			}
+
 				
 
 
