@@ -37,17 +37,87 @@ vector<vector<Vertex<POI>*>*> pending_routes;
 #define PASSENGER_LOADER_SUBMENU 2
 #define BUS_ADDER_MENU 3
 
-
-//Bus* getNextUnusedBus()
-
+bool checkNextRouteForID(int id) {
 
 
-/*void distributeNextRouteToBus() {
+	for (int i = 0; i < pending_routes.at(0)->size(); i++) {
 
 
+			if (pending_routes.at(0)->at(i)->getInfo()->getId() == id)
+				return true;
+
+		
+	}
+	   
+	return false;
+}
 
 
-}*/
+Bus* getNextUnusedBus() {
+
+	cout << "\nFinding unused bus" << endl;
+
+
+	for (int i = 0; i < buses.size(); i++) {
+
+		if (!buses.at(i)->isBeingUsed()) {
+			return buses.at(i);
+			cout << "\nFound a bus" << endl;
+		}
+
+	}
+
+	return NULL;
+}
+
+
+void distributeNextRouteToBus() {
+
+	cout << "\nDistributing next route to bus..." << endl;
+
+	cout << "\nMoving route from pending list into bus..." << endl;
+
+
+	getNextUnusedBus()->setRoute(*pending_routes.at(0));
+
+	pending_routes.erase(pending_routes.begin()); 
+
+
+	cout << "\nRoute has been moved" << endl;
+
+	for (int j = 0; j < pending_pass.size(); j++) {
+
+		int numberOfCommonNodes = 0;
+
+		for (int x = 0; x < pending_pass.at(j)->getNodes()->size(); x++) {
+
+			if (checkNextRouteForID(pending_pass.at(j)->getNodes()->at(x))) {
+
+				numberOfCommonNodes++;
+
+			}
+
+
+		}
+
+
+		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * 0.5) {
+
+			if (j = 0)
+				cout << "\nAdding respective passengers to bus..." << endl;
+
+			getNextUnusedBus()->addPassenger(pending_pass.at(j));
+			pending_pass.erase(pending_pass.begin());
+		}
+
+
+	}
+
+
+	cout << "\nPassangers have been distributed." << endl;
+
+
+}
 
 
 void determineInterest(Graph<POI> *map) {
@@ -177,7 +247,13 @@ void addBus() {
 	cin >> busId;
 
 
-	Bus* bus = new Bus(busId);
+	int capacity;
+
+	cout << "\nEnter capacity? ";
+	cin >> capacity;
+
+
+	Bus* bus = new Bus(busId, capacity);
 
 
 	buses.push_back(bus);
@@ -714,7 +790,7 @@ int main(){
 
 			cout<<"| 4 - Determine what POI's must be visited\n";
 
-			cout<<"| 4 - View Accessible POI's\n";
+			cout<<"| 5 - Allocate people to buses\n";
 
 			cout<<"| 5 - Sort Passengers\n";
 
@@ -753,6 +829,12 @@ int main(){
 				}
 				cout << "\nPOIs determined.\n";*/
 
+
+			}
+
+			else if (option == 5) {
+
+				distributeNextRouteToBus();
 
 			}
 

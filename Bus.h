@@ -14,8 +14,9 @@ using namespace std;
 
 class Bus {
 	int id;
-	vector<Passenger> passengers;
-	vector<POI> route;
+	int capacity;
+	vector<Passenger*> passengers;
+	vector<Vertex<POI>*> route;
 
 
 public:
@@ -24,7 +25,9 @@ public:
 
 	Bus(int id);
 
-	Bus(int id, vector<Passenger> passengers);
+	Bus(int id, int capacity);
+
+	Bus(int id, vector<Passenger*> passengers);
 
 	bool operator==(Bus rhs) {
 
@@ -45,8 +48,9 @@ public:
 	int getId();
 	void setId(int id);
 	void addPassenger(Passenger *passenger);
-	void addToRoute(POI *poi);
 	bool isBeingUsed();
+
+	void setRoute(vector<Vertex<POI>*> newRoute);
 
 };
 
@@ -61,8 +65,16 @@ Bus::Bus(int id) {
 
 }
 
+Bus::Bus(int id, int capacity) {
 
-Bus::Bus(int id, vector<Passenger> passengers) {
+	this->id = id;
+
+	this->capacity = capacity;
+
+}
+
+
+Bus::Bus(int id, vector<Passenger*> passengers) {
 
 	this->id = id;
 
@@ -80,7 +92,7 @@ int Bus::getId() {
 
 void Bus::addPassenger(Passenger *passenger){
 
-	this->passengers.push_back(*passenger);
+	this->passengers.push_back(passenger);
 
 }
 
@@ -93,12 +105,7 @@ void Bus::setId(int id) {
 
 
 
-void Bus::addToRoute(POI *poi) {
 
-	route.push_back(*poi);
-
-
-}
 
 
 bool Bus::isBeingUsed() {
@@ -109,6 +116,18 @@ bool Bus::isBeingUsed() {
 		return true;
 	
 }
+
+
+void Bus::setRoute(vector<Vertex<POI>*> newRoute) {
+
+
+	this->route = newRoute;
+
+
+}
+
+
+
 
 
 #endif /*SRC_BUS_H_*/
