@@ -15,6 +15,7 @@ using namespace std;
 class Bus {
 	int id;
 	int capacity;
+	int nr_people_in = 0;
 	vector<Passenger*> passengers;
 	vector<Vertex<POI>*> route;
 
@@ -49,6 +50,10 @@ public:
 	void setId(int id);
 	void addPassenger(Passenger *passenger);
 	bool isBeingUsed();
+
+	void printpassengers();
+
+	int getNrPeopleIn();
 
 	void setRoute(vector<Vertex<POI>*> newRoute);
 
@@ -93,6 +98,7 @@ int Bus::getId() {
 void Bus::addPassenger(Passenger *passenger){
 
 	this->passengers.push_back(passenger);
+	nr_people_in++;
 
 }
 
@@ -104,7 +110,12 @@ void Bus::setId(int id) {
 }
 
 
+int Bus::getNrPeopleIn() {
 
+	return this->nr_people_in;
+
+
+}
 
 
 
@@ -126,6 +137,19 @@ void Bus::setRoute(vector<Vertex<POI>*> newRoute) {
 
 }
 
+
+void Bus::printpassengers() {
+
+	for (int i = 0; i < passengers.size(); i++) {
+
+
+		cout << "Passenger nr " << i << ": " << passengers.at(i)->getId() << endl;
+
+
+	}
+
+
+}
 
 
 

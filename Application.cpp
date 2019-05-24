@@ -77,8 +77,12 @@ void distributeNextRouteToBus() {
 
 	cout << "\nMoving route from pending list into bus..." << endl;
 
+	Bus* unusedBus = new Bus();
 
-	getNextUnusedBus()->setRoute(*pending_routes.at(0));
+	unusedBus = getNextUnusedBus();
+
+	unusedBus->setRoute(*pending_routes.at(0));
+
 
 	pending_routes.erase(pending_routes.begin()); 
 
@@ -94,19 +98,20 @@ void distributeNextRouteToBus() {
 			if (checkNextRouteForID(pending_pass.at(j)->getNodes()->at(x))) {
 
 				numberOfCommonNodes++;
-
+				cout << "\ncommon node found\n";
 			}
 
 
 		}
 
 
-		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * 0.5) {
+		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * 0) {
 
 			if (j = 0)
 				cout << "\nAdding respective passengers to bus..." << endl;
 
-			getNextUnusedBus()->addPassenger(pending_pass.at(j));
+			cout << "\nAdding passenger " << pending_pass.at(j)->getId() <<  endl;
+			unusedBus->addPassenger(pending_pass.at(j));
 			pending_pass.erase(pending_pass.begin());
 		}
 
@@ -835,6 +840,11 @@ int main(){
 			else if (option == 5) {
 
 				distributeNextRouteToBus();
+
+				cout << endl << "BUS id: " << buses.at(0)->getId() << endl;
+
+
+				buses.at(0)->printpassengers();
 
 			}
 
