@@ -52,8 +52,10 @@ public:
 	bool isBeingUsed();
 
 	void printpassengers();
-
+	int getCapacity();
 	int getNrPeopleIn();
+
+	bool full();
 
 	void setRoute(vector<Vertex<POI>*> newRoute);
 
@@ -151,6 +153,24 @@ void Bus::printpassengers() {
 
 }
 
+
+int Bus::getCapacity() {
+
+	return this->capacity;
+
+
+}
+
+
+bool Bus::full() {
+
+	if (capacity == nr_people_in)
+		return true;
+	else
+		return false;
+
+
+}
 
 
 

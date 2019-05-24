@@ -111,6 +111,14 @@ void distributeNextRouteToBus() {
 				cout << "\nAdding respective passengers to bus..." << endl;
 
 			cout << "\nAdding passenger " << pending_pass.at(j)->getId() <<  endl;
+			
+			if (unusedBus->full()) {
+
+				unusedBus = new Bus();
+
+				unusedBus = getNextUnusedBus();
+			}
+				
 			unusedBus->addPassenger(pending_pass.at(j));
 			pending_pass.erase(pending_pass.begin());
 		}
