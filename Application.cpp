@@ -72,9 +72,9 @@ void setPoints(Graph<POI>* map) {
 
 	cin >> arrival_id;
 
-	POI poi(arrival_id);
+	POI poi2(arrival_id);
 
-	bus->setArrivalPOI(map->findVertex(poi));
+	bus->setArrivalPOI(map->findVertex(poi2));
 
 }
 
@@ -902,7 +902,11 @@ int main(){
 			else if (option == 6) {
 
 				setPoints(&map);
+				/*
+				cout << endl << buses.at(0)->getDeparturePOI()->getInfo()->getId() << endl;
 
+				cout << endl << buses.at(0)->getArrivalPOI()->getInfo()->getId() << endl;
+				*/
 
 			}
 
