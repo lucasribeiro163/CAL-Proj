@@ -172,7 +172,7 @@ void distributeNextRouteToBus() {
 
 		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * 0) {
 
-			if (j = 0)
+			if (j == 0)
 				cout << "\nAdding respective passengers to bus..." << endl;
 
 			cout << "\nAdding passenger " << pending_pass.at(j)->getId() <<  endl;
@@ -749,9 +749,9 @@ void loadMap (Graph<POI> *map){
 
 
 
-	//cout << endl << "\nName of Tag file? ";
-	//cin >> tag_file;
-	//loadTag(tag_file, map);
+	cout << endl << "\nName of Tag file? ";
+	cin >> tag_file;
+	loadTag(tag_file, map);
 
 	
 	/*
@@ -782,9 +782,9 @@ void loadMap (Graph<POI> *map){
 
 	}*/
 
-	//cout << endl << "\nName of Edge file? ";
-	//cin >> edge_file;
-	//loadEdges(edge_file, map);
+	cout << endl << "\nName of Edge file? ";
+	cin >> edge_file;
+	loadEdges(edge_file, map);
 
 	/*
 	cout << "PESOOOOOOOOOOOOOOOOO: ";
