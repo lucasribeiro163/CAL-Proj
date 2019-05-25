@@ -37,6 +37,73 @@ vector<vector<Vertex<POI>*>*> pending_routes;
 #define PASSENGER_LOADER_SUBMENU 2
 #define BUS_ADDER_MENU 3
 
+
+void setPoints(Graph<POI>* map) {
+
+
+	Bus* bus = new Bus();
+
+	int  bus_id;
+
+	cout << "\nEnter bus id: ";
+
+	cin >> bus_id;
+
+	for (int i = 0; i < buses.size(); i++) {
+
+		if (buses.at(i)->getId() == bus_id) {
+			bus = buses.at(i);
+			break;
+		}
+	}
+
+	int departure_id;
+	int arrival_id;
+
+	cout << "\nEnter Departure Point Id: ";
+
+	cin >> departure_id;
+
+	POI poi(departure_id);
+
+	bus->setDeparturePOI(map->findVertex(poi));
+
+	cout << "\nEnter Arrival Point Id: ";
+
+	cin >> arrival_id;
+
+	POI poi(arrival_id);
+
+	bus->setArrivalPOI(map->findVertex(poi));
+
+}
+
+void definePathOfBus(int busId) {
+
+	Bus* bus = new Bus();
+
+	bool bus_found = false;
+
+	for (int i = 0; i < buses.size(); i++) {
+
+		if (buses.at(i)->getId() == busId) {
+			bus = buses.at(i);
+			bus_found = true;
+		}
+
+	}
+
+	if (!bus_found)
+		cout << "\nBus of id: " << busId << " not found\n";
+
+	//Take the nodes of the bus' route and make a new graph with them, disjktra and then caxeiro viajante.
+	
+
+
+
+
+}
+
 bool checkNextRouteForID(int id) {
 
 
@@ -51,7 +118,6 @@ bool checkNextRouteForID(int id) {
 	   
 	return false;
 }
-
 
 Bus* getNextUnusedBus() {
 
@@ -69,7 +135,6 @@ Bus* getNextUnusedBus() {
 
 	return NULL;
 }
-
 
 void distributeNextRouteToBus() {
 
@@ -132,7 +197,6 @@ void distributeNextRouteToBus() {
 
 }
 
-
 void determineInterest(Graph<POI> *map) {
 
 	for (unsigned int i = 0; i < pending_pass.size(); i++) {
@@ -164,10 +228,6 @@ void determineInterest(Graph<POI> *map) {
 	}
 
 }
-
-
-
-
 
 void addNextRoute(Graph<POI> *map) {
 
@@ -250,7 +310,6 @@ void addNextRoute(Graph<POI> *map) {
 
 
 }
-
 
 void addBus() {
 
@@ -671,22 +730,6 @@ int loadNodes(string file_name, Graph<POI> *map) {
 	return 0;
 }
 
-
-
-void loadX(Graph<POI> *map) {
-
-
-	addNextRoute(map);
-
-
-
-
-}
-
-
-
-
-
 void loadMap (Graph<POI> *map){
 
 	string node_file;
@@ -751,7 +794,6 @@ void loadMap (Graph<POI> *map){
 
 }
 
-
 int main(){
 
 
@@ -799,19 +841,19 @@ int main(){
 			else
 				cout<<"| 2 - Reload Passengers info\n";
 
-			cout<<"| 3 - Add bus\n";
+			cout << "| 3 - Add bus\n";
 
-			cout<<"| 4 - Determine what POI's must be visited\n";
+			cout << "| 4 - Determine what POI's must be visited\n";
 
-			cout<<"| 5 - Allocate people to buses\n";
+			cout << "| 5 - Allocate people to buses\n";
 
-			cout<<"| 5 - Sort Passengers\n";
+			cout << "| 6 - Set Departure and Arrival points\n";
 
-			cout<<"| 6 - Trace Optimal Route\n";
+			cout <<"| 7 - Define fastest path for bus\n";
 
-			cout<<"| 7 - Exit\n";
+			cout << "| 8 - Exit\n";
 
-			cout<<"|_\n\nEnter one of the options above: ";
+			cout << "|_\n\nEnter one of the options above: ";
 
 			cin>> option;
 
@@ -853,6 +895,28 @@ int main(){
 
 
 				buses.at(0)->printpassengers();
+
+			
+			}
+
+			else if (option == 6) {
+
+				setPoints(&map);
+
+
+			}
+
+			else if (option == 7) {
+
+				int busId;
+
+
+				cout << "\nInsert Bus number: ";
+				 
+				cin >> busId;
+
+				definePathOfBus(busId);
+
 
 			}
 

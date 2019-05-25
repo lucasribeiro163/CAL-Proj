@@ -18,6 +18,9 @@ class Bus {
 	int nr_people_in = 0;
 	vector<Passenger*> passengers;
 	vector<Vertex<POI>*> route;
+	Vertex<POI>* departure_poi;
+	Vertex<POI>* arrival_poi;
+
 
 
 public:
@@ -56,6 +59,12 @@ public:
 	int getNrPeopleIn();
 
 	bool full();
+
+	Vertex<POI>* getDeparturePOI();
+	Vertex<POI>* getArrivalPOI();
+	void setDeparturePOI(Vertex<POI>* poi);
+	void setArrivalPOI(Vertex<POI>* poi);
+
 
 	void setRoute(vector<Vertex<POI>*> newRoute);
 
@@ -169,6 +178,33 @@ bool Bus::full() {
 	else
 		return false;
 
+
+}
+
+
+
+Vertex<POI>* Bus::getDeparturePOI() {
+
+	return this->departure_poi;
+
+}
+
+
+Vertex<POI>* Bus::getArrivalPOI(){
+
+	return this->arrival_poi;
+
+}
+
+void Bus::setDeparturePOI(Vertex<POI>* poi) {
+
+	this->departure_poi = poi;
+
+}
+
+void Bus::setArrivalPOI(Vertex<POI>* poi) {
+
+	this->arrival_poi = poi;
 
 }
 
