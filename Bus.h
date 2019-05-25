@@ -67,6 +67,7 @@ public:
 
 
 	void setRoute(vector<Vertex<POI>*> newRoute);
+	vector<Vertex<POI>*> getRoute();
 
 };
 
@@ -179,6 +180,10 @@ bool Bus::full() {
 		return false;
 
 
+}
+
+vector<Vertex<POI>*> Bus::getRoute(){
+	return this->route;
 }
 
 

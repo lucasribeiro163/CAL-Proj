@@ -9,7 +9,7 @@
 #include <limits>
 #include <cmath>
 #include <iostream>
-//#include <sstream>
+#include <sstream>
 #include <iomanip>
 #include <fstream>
 #include <cmath>
@@ -30,12 +30,40 @@ vector<Passenger*> pending_pass;
 vector<Bus*> buses;
 vector<vector<Vertex<POI>*>*> pending_routes;
 
+int departure = 0;
+
 
 
 #define MAIN_MENU 0
 #define MAP_LOADER_SUBMENU 1
 #define PASSENGER_LOADER_SUBMENU 2
 #define BUS_ADDER_MENU 3
+
+
+vector<POI> findShort(POI poiD, POI poiA, Graph<POI> *map){
+	auto v = map->getPath(poiD, poiA);
+	for(unsigned int i = 0; i < v.size(); i++){
+		cout << v[i].getId() << " -> ";
+	}
+	cout << endl;
+	return v;
+}
+
+void applyDijkstra(Graph<POI> *map){
+	
+	map->dijkstraShortestPath(POI(departure));
+	// stringstream ss;
+
+	// vector<Vertex<POI>* > vs = map->getVertexSet();
+	// for(unsigned int i = 0; i < vs.size(); i++) {
+	// 	ss << vs[i]->getInfo()->getId() << "<-";
+	// 	if ( vs[i]->getPath() != NULL )
+	// 		ss << vs[i]->getPath()->getInfo()->getId();
+	// 	ss << "|";
+	// }
+	// cout << endl << endl << ss.str() << endl << endl;
+}
+
 
 
 void setPoints(Graph<POI>* map) {
@@ -64,6 +92,9 @@ void setPoints(Graph<POI>* map) {
 
 	cin >> departure_id;
 
+	departure = departure_id;
+	applyDijkstra(map);
+
 	POI poi(departure_id);
 
 	bus->setDeparturePOI(map->findVertex(poi));
@@ -78,10 +109,9 @@ void setPoints(Graph<POI>* map) {
 
 }
 
-void definePathOfBus(int busId) {
+void definePathOfBus(int busId, Graph<POI> *map) {
 
 	Bus* bus = new Bus();
-
 	bool bus_found = false;
 
 	for (int i = 0; i < buses.size(); i++) {
@@ -93,15 +123,20 @@ void definePathOfBus(int busId) {
 
 	}
 
-	if (!bus_found)
+	if (!bus_found){
 		cout << "\nBus of id: " << busId << " not found\n";
+		return;
+	}
+	POI poiA = *bus->getDeparturePOI()->getInfo();
+	vector<Vertex<POI>*> route = bus->getRoute();
+	vector<POI> v;
+
+	v = findShort(poiA, *route[0]->getInfo(), map);
+	for(unsigned int i = 0; i < (route.size() - 1); i++){
+		findShort(*route[i]->getInfo(), *route[i+1]->getInfo(), map);
+	}
 
 	//Take the nodes of the bus' route and make a new graph with them, disjktra and then caxeiro viajante.
-	
-
-
-
-
 }
 
 bool checkNextRouteForID(int id) {
@@ -205,22 +240,11 @@ void determineInterest(Graph<POI> *map) {
 
 			POI poi1(pending_pass.at(i)->getNodes()->at(j));
 
-
-
-
-
-			cout << "\n111111111111111111111111\n";
 			map->findVertex(poi1)->getInfo();
-			cout << "\n22222222222222222222221\n";
-
 
 			cout << map->findVertex(poi1)->getInfo()->getInterest();
 
-
-			cout << "\n33333333333333333333\n";
-
 			map->findVertex(poi1)->getInfo()->addInterested();
-
 
 		}
 
@@ -260,18 +284,18 @@ void addNextRoute(Graph<POI> *map) {
 
 		vector<Vertex<POI>*>* v = new vector<Vertex<POI>*>();
 
-		//cout << "\nPending passenger: " << i ;
+		cout << "\nPending passenger: " << i ;
 
 		for (unsigned int j = 0; j < pending_pass.at(i)->getNodes()->size(); j++) {
 
 
-			//cout << "\nPassenger Node nr: " << j;
+			cout << "\nPassenger Node nr: " << j;
 
 
 			POI poi1(pending_pass.at(i)->getNodes()->at(j));
 
 			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7) {
-				//cout << "\nPOI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
+				cout << "\nPOI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
 
 
 				v->push_back(map->findVertex(poi1));
@@ -791,7 +815,6 @@ void loadMap (Graph<POI> *map){
 	Edge<POI> e = map.getVertexSet().at(23)-> getEdgeAt(0);
 	cout << "PESOOOOOOOOOOOOOOOOO: " << e.getWeight();*/
 
-
 }
 
 int main(){
@@ -919,9 +942,13 @@ int main(){
 				 
 				cin >> busId;
 
-				definePathOfBus(busId);
+				definePathOfBus(busId, &map);
 
 
+			}
+			
+			else if(option == 8){
+				break;
 			}
 
 		}
