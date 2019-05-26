@@ -71,6 +71,7 @@ public:
 
 	void addInterested();
 
+	void setId(int id);
 
 	int getInterest();
 
@@ -291,6 +292,16 @@ void POI::displayAllInfo() {
 	cout << endl;
 
 }
+
+void POI::setId(int id) {
+
+	this->id = id;
+
+
+
+}
+
+
 
 void POI::addInterested() {
 

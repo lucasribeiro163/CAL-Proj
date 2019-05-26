@@ -20,6 +20,8 @@ class Bus {
 	vector<Vertex<POI>*> route;
 	Vertex<POI>* departure_poi;
 	Vertex<POI>* arrival_poi;
+	vector<int> best_sequence;
+
 
 
 
@@ -68,6 +70,8 @@ public:
 
 	void setRoute(vector<Vertex<POI>*> newRoute);
 	vector<Vertex<POI>*> getRoute();
+	void setBestSequence(vector<int> best_sequence);
+
 
 };
 
@@ -120,6 +124,13 @@ void Bus::setId(int id) {
 	this->id = id;
 
 }
+
+void Bus::setBestSequence(vector<int> best_sequence) {
+
+	this->best_sequence = best_sequence;
+
+}
+
 
 
 int Bus::getNrPeopleIn() {

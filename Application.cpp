@@ -39,6 +39,181 @@ int departure = 0;
 #define PASSENGER_LOADER_SUBMENU 2
 #define BUS_ADDER_MENU 3
 
+double poiDistance(POI x, POI y) {
+
+	double x1 = y.getX();
+	double y1 = y.getY();
+	double y2 = x.getY();
+	double x2 = x.getX();
+/*
+	cout << "\nDistancia info:\n";
+
+	cout << "X1: " << x1 << endl;
+	cout << "Y1: " << y1 << endl;
+	cout << "X2: " << x2 << endl;
+	cout << "Y2: " << y2 << endl;
+	cout << "Distancia: " << sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0) << endl;*/
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+
+
+}
+
+
+void display(int a[], int n)
+{
+	cout << "Uno: ";
+	for (int i = 0; i < n; i++) {
+		cout << "aqui:" << a[i] << "  ";
+	}
+	cout << endl;
+}
+
+
+vector<vector<int>> findPermutations(int a[], int n)
+{
+	vector<vector<int>> possibilities;
+
+
+
+	int index = 0;
+
+	sort(a, a + n);
+
+	do {
+
+		possibilities.push_back(*new vector<int>);
+		for (int i = 0; i < n; i++) {
+			possibilities.at(index).push_back(a[i]);
+		}
+		index++;
+
+	} while (next_permutation(a, a + n));
+
+	return possibilities;
+}
+
+
+
+void getBestSequence(Bus* bus, Graph<POI> *map) {
+
+	cout << "\nGetting all points...\n";
+
+
+	int nr_of_poi = bus->getRoute().size();
+
+	int* array = new int[nr_of_poi];
+
+	for (int i = 0; i < nr_of_poi; i++){
+
+		array[i] = bus->getRoute().at(i)->getInfo()->getId();
+
+	}
+
+	cout << "\nFinding all sequences of points...\n";
+
+
+	vector<vector<int>> possibilities;
+	possibilities = findPermutations(array, nr_of_poi);
+
+	/*for (int i = 0; i < possibilities.size(); i++) {
+
+		cout << "\nPermutations at " << i << endl;
+
+		for (int j = 0; j < possibilities.at(i).size(); j++) {
+
+			cout << possibilities.at(i).at(j) << " ";
+
+
+		}
+
+		cout << endl;
+
+	}*/
+
+
+	cout << "\nFinding best sequence...\n";
+
+	double shortest_distance = DBL_MAX;
+	double current_distance = 0;
+	vector<int> best_sequence;
+
+
+	cout << "        Distance: " << current_distance << endl;
+
+	//Sequencia a sequencia
+	for (int i = 0; i < possibilities.size(); i++) {
+
+		cout << "\nTesting sequence number: "<< i << " \n";
+
+		cout << "Best Distance: " << shortest_distance << endl;
+
+		//elemento da sequencia a elemento da sequecnia
+		for (int j = 1; j < possibilities.at(i).size(); j++) {
+
+
+			cout << "\n       Testing element number: " << j << " \n";
+
+
+			POI poi2(possibilities.at(i).at(j - 1));
+
+			POI poi1(possibilities.at(i).at(j));
+
+
+
+			cout << "\n        Updating distance\n";
+
+			cout << "        Distance: " << poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo()) << endl;
+
+			current_distance += poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo());
+
+			cout << "        Distance: " << current_distance << endl;
+		}
+
+		if (current_distance < shortest_distance) {
+			shortest_distance = current_distance;
+			best_sequence = possibilities.at(i);
+		}
+
+		current_distance = 0;
+
+	}
+
+
+	cout << "Shortest distance: " <<  shortest_distance << endl;
+
+	for (int x = 0; x < best_sequence.size(); x++) {
+
+		cout << "Ponto " << x << ": " << best_sequence.at(x) << endl;
+
+	}
+
+
+	bus->setBestSequence(best_sequence);
+
+
+}
+
+void definePathOfBus(int busId, Graph<POI> *map) {
+
+	Bus* bus = new Bus();
+	bool bus_found = false;
+
+	for (int i = 0; i < buses.size(); i++) {
+
+		if (buses.at(i)->getId() == busId) {
+			bus = buses.at(i);
+			bus_found = true;
+		}
+
+	}
+
+	if (!bus_found) {
+		cout << "\nBus of id: " << busId << " not found\n";
+		return;
+	}
+
+	getBestSequence(bus, map);
+}
 
 vector<POI> findShort(POI poiD, POI poiA, Graph<POI> *map){
 	auto v = map->getPath(poiD, poiA);
@@ -63,8 +238,6 @@ void applyDijkstra(Graph<POI> *map){
 	// }
 	// cout << endl << endl << ss.str() << endl << endl;
 }
-
-
 
 void setPoints(Graph<POI>* map) {
 
@@ -107,36 +280,6 @@ void setPoints(Graph<POI>* map) {
 
 	bus->setArrivalPOI(map->findVertex(poi2));
 
-}
-
-void definePathOfBus(int busId, Graph<POI> *map) {
-
-	Bus* bus = new Bus();
-	bool bus_found = false;
-
-	for (int i = 0; i < buses.size(); i++) {
-
-		if (buses.at(i)->getId() == busId) {
-			bus = buses.at(i);
-			bus_found = true;
-		}
-
-	}
-
-	if (!bus_found){
-		cout << "\nBus of id: " << busId << " not found\n";
-		return;
-	}
-	POI poiA = *bus->getDeparturePOI()->getInfo();
-	vector<Vertex<POI>*> route = bus->getRoute();
-	vector<POI> v;
-
-	v = findShort(poiA, *route[0]->getInfo(), map);
-	for(unsigned int i = 0; i < (route.size() - 1); i++){
-		findShort(*route[i]->getInfo(), *route[i+1]->getInfo(), map);
-	}
-
-	//Take the nodes of the bus' route and make a new graph with them, disjktra and then caxeiro viajante.
 }
 
 bool checkNextRouteForID(int id) {
@@ -294,7 +437,7 @@ void addNextRoute(Graph<POI> *map) {
 
 			POI poi1(pending_pass.at(i)->getNodes()->at(j));
 
-			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.7) {
+			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * 0.5) {
 				cout << "\nPOI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
 
 
@@ -602,18 +745,6 @@ int loadTag(string file_name, Graph<POI> *map) {
 	return 0;
 }
 
-double distance(POI x, POI y) {
-
-	double x1 = y.getX();
-	double y1 = y.getY();
-	double y2 = x.getY();
-	double x2 = x.getX();
-
-	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
-
-
-}
-
 void parseEdgeline(string line, string ret[3]) {
 
 	int element = 0;
@@ -672,7 +803,7 @@ int loadEdges(string file_name, Graph<POI> *map) {
 				POI *poi = map->findVertex(poi1)->getInfo();
 
 
-				if (!map->addEdge(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo(), distance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo())))
+				if (!map->addEdge(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo(), poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo())))
 					cout << "Source or destination vertex doesnt exist";
 
 				//cout << "Sai do stod:" << stoi(ret[0]) << " e " << stod(ret[1]) << " e " << stod(ret[2]) << endl;
@@ -874,9 +1005,13 @@ int main(){
 
 			cout <<"| 7 - Define fastest path for bus\n";
 
-			cout << "| 8 - Exit\n";
+			cout << "| 8 - Define fastest path for bus (faster but less precise)\n";
+
+			cout << "| 9 - Exit\n";
 
 			cout << "|_\n\nEnter one of the options above: ";
+
+
 
 			cin>> option;
 
@@ -911,6 +1046,10 @@ int main(){
 			}
 
 			else if (option == 5) {
+
+				
+
+
 
 				distributeNextRouteToBus();
 
@@ -947,7 +1086,20 @@ int main(){
 
 			}
 			
-			else if(option == 8){
+			else if (option == 8) {
+
+
+				
+				getBestSequence(buses.at(0),&map);
+
+
+
+
+
+
+			}
+
+			else if(option == 9){
 				break;
 			}
 
