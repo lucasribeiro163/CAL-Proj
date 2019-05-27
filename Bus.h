@@ -21,6 +21,7 @@ class Bus {
 	Vertex<POI>* departure_poi;
 	Vertex<POI>* arrival_poi;
 	vector<int> best_sequence;
+	vector<POI> optimal_path;
 
 
 
@@ -71,7 +72,10 @@ public:
 	void setRoute(vector<Vertex<POI>*> newRoute);
 	vector<Vertex<POI>*> getRoute();
 	void setBestSequence(vector<int> best_sequence);
+	vector<int> getBestSequence();
 
+	vector<POI> getOptimalPath();
+	void setOptimalPath(vector<POI> path);
 
 };
 
@@ -224,6 +228,24 @@ void Bus::setArrivalPOI(Vertex<POI>* poi) {
 
 }
 
+vector<int> Bus::getBestSequence() {
+
+
+	return this->best_sequence;
+
+
+}
+
+vector<POI> Bus::getOptimalPath() {
+
+	return this->optimal_path;
+}
+
+
+void Bus::setOptimalPath(vector<POI> path) {
+
+	this->optimal_path = path;
+}
 
 
 #endif /*SRC_BUS_H_*/

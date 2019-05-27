@@ -39,6 +39,40 @@ int departure = 0;
 #define PASSENGER_LOADER_SUBMENU 2
 #define BUS_ADDER_MENU 3
 
+
+void findFastPath(Bus* bus, Graph<POI>* map) {
+
+	vector<POI> totalPath;
+
+
+	for (int i = 1; i < bus->getBestSequence().size(); i++) {
+
+		POI poi1(bus->getBestSequence().at(i-1));
+		POI poi2(bus->getBestSequence().at(i));
+
+
+		cout << "\nUsing dijkstra to analyze graph\n";
+
+		map->dijkstraShortestPath(*map->findVertex(poi1)->getInfo());
+
+		vector<POI> temp_path;
+
+		cout << "\nGetting path between points\n";
+
+		temp_path = map->getPath(poi1, poi2);
+
+
+		cout << "\nConcatenating paths\n";
+
+		totalPath.insert(totalPath.end(), temp_path.begin(), temp_path.end());
+
+	}
+	
+	bus->setOptimalPath(totalPath);
+
+
+}
+
 double poiDistance(POI x, POI y) {
 
 	double x1 = y.getX();
@@ -58,7 +92,6 @@ double poiDistance(POI x, POI y) {
 
 }
 
-
 void display(int a[], int n)
 {
 	cout << "Uno: ";
@@ -67,7 +100,6 @@ void display(int a[], int n)
 	}
 	cout << endl;
 }
-
 
 vector<vector<int>> findPermutations(int a[], int n)
 {
@@ -92,8 +124,6 @@ vector<vector<int>> findPermutations(int a[], int n)
 	return possibilities;
 }
 
-
-
 void getBestSequence(Bus* bus, Graph<POI> *map) {
 
 	cout << "\nGetting all points...\n";
@@ -109,11 +139,20 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 
 	}
 
+
 	cout << "\nFinding all sequences of points...\n";
 
 
 	vector<vector<int>> possibilities;
 	possibilities = findPermutations(array, nr_of_poi);
+
+	for (int x = 0; x < possibilities.size(); x++) {
+
+		possibilities.at(x).insert(possibilities.at(x).begin(), bus->getDeparturePOI()->getInfo()->getId());
+		possibilities.at(x).push_back(bus->getArrivalPOI()->getInfo()->getId());
+
+	}
+	
 
 	/*for (int i = 0; i < possibilities.size(); i++) {
 
@@ -138,20 +177,20 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 	vector<int> best_sequence;
 
 
-	cout << "        Distance: " << current_distance << endl;
+	//cout << "        Distance: " << current_distance << endl;
 
 	//Sequencia a sequencia
 	for (int i = 0; i < possibilities.size(); i++) {
 
-		cout << "\nTesting sequence number: "<< i << " \n";
+		//cout << "\nTesting sequence number: "<< i << " \n";
 
-		cout << "Best Distance: " << shortest_distance << endl;
+		//cout << "Best Distance: " << shortest_distance << endl;
 
 		//elemento da sequencia a elemento da sequecnia
 		for (int j = 1; j < possibilities.at(i).size(); j++) {
 
 
-			cout << "\n       Testing element number: " << j << " \n";
+			//cout << "\n       Testing element number: " << j << " \n";
 
 
 			POI poi2(possibilities.at(i).at(j - 1));
@@ -160,13 +199,13 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 
 
 
-			cout << "\n        Updating distance\n";
+			//cout << "\n        Updating distance\n";
 
-			cout << "        Distance: " << poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo()) << endl;
+			//cout << "        Distance: " << poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo()) << endl;
 
 			current_distance += poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo());
 
-			cout << "        Distance: " << current_distance << endl;
+			//cout << "        Distance: " << current_distance << endl;
 		}
 
 		if (current_distance < shortest_distance) {
@@ -179,18 +218,48 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 	}
 
 
-	cout << "Shortest distance: " <<  shortest_distance << endl;
+	cout << "\nShortest distance: " <<  shortest_distance << endl;
 
 	for (int x = 0; x < best_sequence.size(); x++) {
 
 		cout << "Ponto " << x << ": " << best_sequence.at(x) << endl;
 
 	}
-
+	
 
 	bus->setBestSequence(best_sequence);
 
 
+}
+
+void defineFastPathOfBus(int busId, Graph<POI> *map) {
+
+	cout << "\nFinding bus\n";
+
+	Bus* bus = new Bus();
+	bool bus_found = false;
+
+	for (int i = 0; i < buses.size(); i++) {
+
+		if (buses.at(i)->getId() == busId) {
+			bus = buses.at(i);
+			bus_found = true;
+		}
+
+	}
+
+	if (!bus_found) {
+		cout << "\nBus of id: " << busId << " not found\n";
+		return;
+	}
+
+	cout << "\nGetting best sequence\n";
+
+	getBestSequence(bus, map);
+
+	cout << "\nFinding fastest path\n";
+
+	findFastPath(bus, map);
 }
 
 void definePathOfBus(int busId, Graph<POI> *map) {
@@ -212,7 +281,6 @@ void definePathOfBus(int busId, Graph<POI> *map) {
 		return;
 	}
 
-	getBestSequence(bus, map);
 }
 
 vector<POI> findShort(POI poiD, POI poiA, Graph<POI> *map){
@@ -1089,11 +1157,62 @@ int main(){
 			else if (option == 8) {
 
 
+				/*int busId;
+
+
+				cout << "\nInsert Bus number: ";
+
+				cin >> busId;
+
+				defineFastPathOfBus(busId, &map);
+				*/
+
+				cout << "\nCreated Bus\n";
+
+				Bus* bus = new Bus(1234);
+
+				cout << "\nsetting departure and arrival pois\n";
+
+				POI poi1(111443920);
+
+				POI poi2(480482921);
+
+				bus->setArrivalPOI(map.findVertex(poi2));
+
+				bus->setDeparturePOI(map.findVertex(poi1));
 				
-				getBestSequence(buses.at(0),&map);
+				cout << "\Insetting route points\n";
+
+				vector<Vertex<POI>*> route1;
+
+				POI poi3(122528341);
+				route1.push_back(map.findVertex(poi3));
+
+				POI poi4(311887518);
+				route1.push_back(map.findVertex(poi4));
+
+				POI poi5(311887521);
+				route1.push_back(map.findVertex(poi5));
+
+				POI poi6(428208843);
+				route1.push_back(map.findVertex(poi6));
 
 
+				bus->setRoute(route1);
 
+				buses.push_back(bus);
+
+				cout << "\nDefining path of bus\n";
+
+
+				defineFastPathOfBus(1234, &map);
+
+				for (int i = 0; i < bus->getOptimalPath().size(); i++) {
+
+					cout << "Path node nr: " << i << " " << bus->getOptimalPath().at(i).getId() << endl;
+					
+
+				}
 
 
 
