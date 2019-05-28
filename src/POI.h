@@ -305,10 +305,8 @@ void POI::setId(int id) {
 
 void POI::addInterested() {
 
-	cout << "\n incrementing \n";
 	people_interested++;
 
-	cout << "\n incremented \n";
 
 }
 

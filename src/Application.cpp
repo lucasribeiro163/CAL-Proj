@@ -78,7 +78,6 @@ double poiDistanceDijkstra(POI poi1, POI poi2, Graph<POI>* map) {
 
 	res = map->findVertex(poi2)->getDist();
 
-	cout << "\nDistancia Dijsktra: " << res << endl;
 
 	return res;
 }
@@ -113,20 +112,7 @@ void getBestSequenceDijkstra(Bus* bus, Graph<POI> *map) {
 	}
 
 
-	/*for (int i = 0; i < possibilities.size(); i++) {
 
-		cout << "\nPermutations at " << i << endl;
-
-		for (int j = 0; j < possibilities.at(i).size(); j++) {
-
-			cout << possibilities.at(i).at(j) << " ";
-
-
-		}
-
-		cout << endl;
-
-	}*/
 
 
 	cout << "\nFinding best sequence...\n";
@@ -136,20 +122,15 @@ void getBestSequenceDijkstra(Bus* bus, Graph<POI> *map) {
 	vector<int> best_sequence;
 
 
-	//cout << "        Distance: " << current_distance << endl;
 
 	//Sequencia a sequencia
 	for (int i = 0; i < possibilities.size(); i++) {
 
-		//cout << "\nTesting sequence number: "<< i << " \n";
-
-		//cout << "Best Distance: " << shortest_distance << endl;
 
 		//elemento da sequencia a elemento da sequecnia
 		for (int j = 1; j < possibilities.at(i).size(); j++) {
 
 
-			//cout << "\n       Testing element number: " << j << " \n";
 
 
 			POI poi2(possibilities.at(i).at(j - 1));
@@ -157,14 +138,8 @@ void getBestSequenceDijkstra(Bus* bus, Graph<POI> *map) {
 			POI poi1(possibilities.at(i).at(j));
 
 
-
-			//cout << "\n        Updating distance\n";
-
-			//cout << "        Distance: " << poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo()) << endl;
-
 			current_distance += poiDistanceDijkstra(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo(), map);
 
-			//cout << "        Distance: " << current_distance << endl;
 		}
 
 		if (current_distance < shortest_distance) {
@@ -179,11 +154,6 @@ void getBestSequenceDijkstra(Bus* bus, Graph<POI> *map) {
 
 	cout << "\nShortest distance: " << shortest_distance << endl;
 
-	for (int x = 0; x < best_sequence.size(); x++) {
-
-		cout << "Ponto " << x << ": " << best_sequence.at(x) << endl;
-
-	}
 
 
 	bus->setBestSequence(best_sequence);
@@ -196,24 +166,24 @@ void findSlowPath(Bus* bus, Graph<POI>* map) {
 	vector<POI> totalPath;
 
 
+
+	cout << "\nUsing dijkstra to analyze graph\n";
+
 	for (int i = 1; i < bus->getBestSequence().size(); i++) {
 
 		POI poi1(bus->getBestSequence().at(i - 1));
 		POI poi2(bus->getBestSequence().at(i));
 
 
-		cout << "\nUsing dijkstra to analyze graph\n";
 
 		map->dijkstraShortestPath(*map->findVertex(poi1)->getInfo());
 
 		vector<POI> temp_path;
 
-		cout << "\nGetting path between points\n";
 
 		temp_path = map->getPath(poi1, poi2);
 
 
-		cout << "\nConcatenating paths\n";
 
 
 
@@ -355,26 +325,9 @@ double poiDistance(POI x, POI y) {
 	double y1 = y.getY();
 	double y2 = x.getY();
 	double x2 = x.getX();
-/*
-	cout << "\nDistancia info:\n";
 
-	cout << "X1: " << x1 << endl;
-	cout << "Y1: " << y1 << endl;
-	cout << "X2: " << x2 << endl;
-	cout << "Y2: " << y2 << endl;
-	cout << "Distancia: " << sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0) << endl;*/
 	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 
-
-}
-
-void display(int a[], int n)
-{
-	cout << "Uno: ";
-	for (int i = 0; i < n; i++) {
-		cout << "aqui:" << a[i] << "  ";
-	}
-	cout << endl;
 }
 
 void getBestSequence(Bus* bus, Graph<POI> *map) {
@@ -407,20 +360,6 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 	}
 	
 
-	/*for (int i = 0; i < possibilities.size(); i++) {
-
-		cout << "\nPermutations at " << i << endl;
-
-		for (int j = 0; j < possibilities.at(i).size(); j++) {
-
-			cout << possibilities.at(i).at(j) << " ";
-
-
-		}
-
-		cout << endl;
-
-	}*/
 
 
 	cout << "\nFinding best sequence...\n";
@@ -433,37 +372,25 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 	vector<int> best_sequence;
 
 
-	//cout << "        Distance: " << current_distance << endl;
 
 	//Sequencia a sequencia
 	for (int i = 0; i < possibilities.size(); i++) {
 
-		//cout << "\nTesting sequence number: "<< i << " \n";
-
-		//cout << "Best Distance: " << shortest_distance << endl;
 
 		//elemento da sequencia a elemento da sequecnia
 		for (int j = 1; j < possibilities.at(i).size(); j++) {
 
-
-			//cout << "\n       Testing element number: " << j << " \n";
-
-
+					   
 			POI poi2(possibilities.at(i).at(j - 1));
 
 			POI poi1(possibilities.at(i).at(j));
 
 
 
-			//cout << "\n        Updating distance\n";
-
-			//cout << "        Distance: " << poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo()) << endl;
-
 			current_distance += poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo());
 			real_distance += poiDistanceDijkstra(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo(),map);
 
 
-			//cout << "        Distance: " << current_distance << endl;
 		}
 
 		if (current_distance < shortest_distance) {
@@ -482,11 +409,7 @@ void getBestSequence(Bus* bus, Graph<POI> *map) {
 
 	cout << "\nReal distance: " << real_distance << endl;
 
-	for (int x = 0; x < best_sequence.size(); x++) {
 
-		cout << "Ponto " << x << ": " << best_sequence.at(x) << endl;
-
-	}
 	
 
 	bus->setBestSequence(best_sequence);
@@ -523,52 +446,6 @@ void defineFastPathOfBus(int busId, Graph<POI> *map) {
 
 	findFastPath(bus, map);
 }
-//
-void definePathOfBus(int busId, Graph<POI> *map) {
-
-	Bus* bus = new Bus();
-	bool bus_found = false;
-
-	for (int i = 0; i < buses.size(); i++) {
-
-		if (buses.at(i)->getId() == busId) {
-			bus = buses.at(i);
-			bus_found = true;
-		}
-
-	}
-
-	if (!bus_found) {
-		cout << "\nBus of id: " << busId << " not found\n";
-		return;
-	}
-
-}
-
-vector<POI> findShort(POI poiD, POI poiA, Graph<POI> *map){
-	auto v = map->getPath(poiD, poiA);
-	for(unsigned int i = 0; i < v.size(); i++){
-		cout << v[i].getId() << " -> ";
-	}
-	cout << endl;
-	return v;
-}
-
-void applyDijkstra(Graph<POI> *map){
-	
-	map->dijkstraShortestPath(POI(departure));
-	// stringstream ss;
-
-	// vector<Vertex<POI>* > vs = map->getVertexSet();
-	// for(unsigned int i = 0; i < vs.size(); i++) {
-	// 	ss << vs[i]->getInfo()->getId() << "<-";
-	// 	if ( vs[i]->getPath() != NULL )
-	// 		ss << vs[i]->getPath()->getInfo()->getId();
-	// 	ss << "|";
-	// }
-	// cout << endl << endl << ss.str() << endl << endl;
-}
-//
 void setPoints(Graph<POI>* map) {
 
 
@@ -596,7 +473,7 @@ void setPoints(Graph<POI>* map) {
 	cin >> departure_id;
 
 	departure = departure_id;
-	applyDijkstra(map);
+	
 
 	POI poi(departure_id);
 
@@ -671,19 +548,17 @@ void distributeNextRouteToBus() {
 			if (checkNextRouteForID(pending_pass.at(j)->getNodes()->at(x))) {
 
 				numberOfCommonNodes++;
-				cout << "\ncommon node found\n";
 			}
 
 
 		}
 
 
-		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * poi_perc) {
+		if (numberOfCommonNodes > pending_pass.at(j)->getNodes()->size() * pass_perc) {
 
 			if (j == 0)
 				cout << "\nAdding respective passengers to bus..." << endl;
 
-			cout << "\nAdding passenger " << pending_pass.at(j)->getId() <<  endl;
 			
 			if (unusedBus->full()) {
 
@@ -700,7 +575,7 @@ void distributeNextRouteToBus() {
 	}
 
 
-	cout << "\nPassangers have been distributed." << endl;
+	cout << "\nPassengers have been distributed." << endl;
 
 
 }
@@ -715,7 +590,6 @@ void determineInterest(Graph<POI> *map) {
 
 			map->findVertex(poi1)->getInfo();
 
-			cout << map->findVertex(poi1)->getInfo()->getInterest();
 
 			map->findVertex(poi1)->getInfo()->addInterested();
 
@@ -728,7 +602,6 @@ void determineInterest(Graph<POI> *map) {
 
 void eraseLooseEnds(vector<Vertex<POI>*>* v, Graph<POI> *map) {
 
-	cout << "\nRemoving loose ends from route...";
 
 	for (int i = 0; i < v->size(); i++) {
 
@@ -783,18 +656,16 @@ void addNextRoute(Graph<POI> *map) {
 
 		vector<Vertex<POI>*>* v = new vector<Vertex<POI>*>();
 
-		cout << "\nPending passenger: " << i ;
 
 		for (unsigned int j = 0; j < pending_pass.at(i)->getNodes()->size(); j++) {
 
 
-			cout << "\nPassenger Node nr: " << j;
 
 
 			POI poi1(pending_pass.at(i)->getNodes()->at(j));
 
-			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * pass_perc) {
-				cout << "\nPOI: " << map->findVertex(poi1)->getInfo()->getId() << endl;
+			if (map->findVertex(poi1)->getInfo()->getInterest() > pending_pass.size() * poi_perc) {
+				
 
 
 				v->push_back(map->findVertex(poi1));
@@ -802,6 +673,7 @@ void addNextRoute(Graph<POI> *map) {
 
 			}
 
+			
 
 			eraseLooseEnds(v, map);
 
@@ -812,28 +684,12 @@ void addNextRoute(Graph<POI> *map) {
 
 			
 
-			cout << "\nchega aqui\n";
-
 		}
-		/*
-		cout << "\nTESTTTT 1 na variavel local: \n";
-
-		for (unsigned int j = 0; j < v->size(); j++) {
-
-			cout << "Member of route" << v->at(j)->getInfo()->getId() << endl;
-
-
-		}
-		*/
-
 
 	}
 
 
 	cout << "\nPOIs determined.\n";
-
-
-
 
 }
 
@@ -857,7 +713,7 @@ void addBus() {
 	buses.push_back(bus);
 
 
-	cout << "\n Added bus of Id=" << busId << ".\n";
+	cout << "\nAdded bus of Id=" << busId << ".\n\n";
 
 
 
@@ -876,7 +732,6 @@ string parseId(string line) {
 
 	}
 
-	cout << "HERE BITCH " <<ret << endl;
 
 	return ret;
 }
@@ -927,15 +782,9 @@ int loadPassengers() {
 
 	}
 	
-	if (!pending_pass.empty()) {
-		pending_pass.at(1)->printNodes();
+	
 
-		cout << endl << pending_pass.at(0)->getId() << endl;
-
-		cout << endl << pending_pass.at(1)->getId() << endl;
-	}
-
-
+	cout << "\nFinished reading passenger file. \n";
 
 	return 0;
 
@@ -976,27 +825,12 @@ int loadTag(string file_name, Graph<POI> *map) {
 
 					POI poi1(stoi(r_content));
 
-					/*
-					POI poi(497922579);
-					cout << "HEREEEEEE " << map->findVertex(poi)->getInfo().getAmmenities() << endl;*/
 
 					if (tag == "tourism=information") {
-
-						//cout << "\nsetting poi1 info to true \n";
-
-						//cout << "\nHEREEEEEErrrr " << map->findVertex(poi1)->getInfo()->isInfo() << endl;
 						map->findVertex(poi1)->getInfo()->enableInformation();
 
 						map->findVertex(poi1)->getInfo()->enableInformation();
-						//cout << "\nHEREEEEEE ";
-						/*if(!map->findVertex(poi1)->getInfo()->isInfo())
-							cout << "Not here tho" << endl;
-						else
-							cout << "here too" << endl;
-							*/
-							//cout << "Vertex id: " << map->findVertex(poi1)->getInfo().getId();
-
-							//cout << "\nHEREEEEEE " << map->findVertex(poi)->getInfo().getAmmenities() << endl;
+						
 					}
 
 					else if (tag == "tourism=hotel")
@@ -1042,9 +876,7 @@ int loadTag(string file_name, Graph<POI> *map) {
 
 				if (r_content == "tourism=information") {
 
-					//cout << "HERE info\n";
 					tag = "tourism=information";
-					//cout << "Tag set to: " << tag << endl;
 				}
 				else if (r_content == "tourism=hotel") {
 
@@ -1097,9 +929,6 @@ int loadTag(string file_name, Graph<POI> *map) {
 
 
 
-	//determineInterest(map);
-	//addNextRoute(map);
-
 
 	return 0;
 }
@@ -1117,7 +946,6 @@ void parseEdgeline(string line, string ret[3]) {
 			ret[element].push_back(line.at(i));
 		}
 
-		//cout << ret[0] << " e " << ret[1] << endl;
 	}
 
 }
@@ -1150,7 +978,6 @@ int loadEdges(string file_name, Graph<POI> *map) {
 
 
 				parseEdgeline(r_content, ret);
-				//cout << "Sai da nodeline:" << ret[0] << " e " << ret[1] << endl;
 
 
 				POI poi1(stoi(ret[0]));
@@ -1165,7 +992,6 @@ int loadEdges(string file_name, Graph<POI> *map) {
 				if (!map->addEdge(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo(), poiDistance(*map->findVertex(poi1)->getInfo(), *map->findVertex(poi2)->getInfo())))
 					cout << "Source or destination vertex doesnt exist";
 
-				//cout << "Sai do stod:" << stoi(ret[0]) << " e " << stod(ret[1]) << " e " << stod(ret[2]) << endl;
 
 				j++;
 			}
@@ -1194,7 +1020,6 @@ void parseNodeline(string line, string ret[3]) {
 				ret[element].push_back(line.at(i));
 		}
 
-		//cout << ret[0] << " e " << ret[1] << endl;
 	}
 
 }
@@ -1220,12 +1045,10 @@ int loadNodes(string file_name, Graph<POI> *map) {
 			string ret[3];
 
 			parseNodeline(r_content, ret);
-			//cout << "Sai da nodeline:" << ret[0] << " e " << ret[1] << endl;
 
 			POI poi(stoi(ret[0]),stod(ret[1]), stod(ret[2]));
 			if (!map->addVertex(poi))
 				cout << "Vertex already exists.\n";
-			//cout << "Sai do stod:" << stoi(ret[0]) << " e " << stod(ret[1]) << " e " << stod(ret[2]) << endl;
 	
 
 			if (map->getVertexSet().empty())
@@ -1259,7 +1082,6 @@ void loadMap (Graph<POI> *map){
 
 
 
-	//cout << "\nX: \n" << map.findVertex(poi)->getInfo().getX();
 
 
 
@@ -1268,42 +1090,12 @@ void loadMap (Graph<POI> *map){
 	loadTag(tag_file, map);
 
 	
-	/*
-	POI poi(414957020);
-
-	Vertex<POI> *v = map.findVertex(poi);
-
-
-	v->getInfo()->displayAllInfo();*/
-
-
-
-	//v->getInfo()->enableInformation();
-
-	//v->getInfo()->displayAllInfo();
-
-
-	/*
-	int index = 0;
-	while (true) {
-
-		cout << "Amenitiesss of: ";
-		string ret = "Esta aqui: ";
-		cin >> index;
-		POI poi1(index);
-		//ret += map.findVertex(poi1)->getInfo()->getAmmenities();
-		cout << "\nAmmenitiesss: " << ret << endl << endl;
-
-	}*/
+	
 
 	cout << endl << "\nName of Edge file? ";
 	cin >> edge_file;
 	loadEdges(edge_file, map);
 
-	/*
-	cout << "PESOOOOOOOOOOOOOOOOO: ";
-	Edge<POI> e = map.getVertexSet().at(23)-> getEdgeAt(0);
-	cout << "PESOOOOOOOOOOOOOOOOO: " << e.getWeight();*/
 
 }
 
@@ -1368,7 +1160,9 @@ int main(){
 
 			cout << "| 9 - View Path\n";
 
-			cout << "| 10 - Exit\n";
+			cout << "| 10 - Define Choice variables\n";
+
+			cout << "| 11 - Exit\n";
 
 			cout << "|_\n\nEnter one of the options above: ";
 
@@ -1385,32 +1179,14 @@ int main(){
 			else if (option == 3)
 				Displayed_screen = BUS_ADDER_MENU;
 
-			//OPTION 4 route adder
 
 			else if (option == 4) {
 
-
 				addNextRoute(&map);
-
-				/*
-				cout << "\nTESTTTT 2 na variavel global: \n";
-
-				for (unsigned int j = 0; j < pending_routes.at(0)->size(); j++) {
-
-					cout << "Member of route" << pending_routes.at(0)->at(j)->getInfo()->getId() << endl;
-
-
-				}
-				cout << "\nPOIs determined.\n";*/
-
 
 			}
 
 			else if (option == 5) {
-
-				
-
-
 
 				distributeNextRouteToBus();
 
@@ -1425,12 +1201,6 @@ int main(){
 			else if (option == 6) {
 
 				setPoints(&map);
-				/*
-				cout << endl << buses.at(0)->getDeparturePOI()->getInfo()->getId() << endl;
-
-				cout << endl << buses.at(0)->getArrivalPOI()->getInfo()->getId() << endl;
-				*/
-
 			}
 
 			else if (option == 7) {
@@ -1444,48 +1214,7 @@ int main(){
 				cin >> busId;
 
 				defineSlowPathOfBus(busId, &map);
-				/*
-				cout << "\nCreated Bus\n";
-
-				Bus* bus = new Bus(1234);
-
-				cout << "\nsetting departure and arrival pois\n";
-
-				POI poi1(111443920);
-
-				POI poi2(480482921);
-
-				bus->setArrivalPOI(map.findVertex(poi2));
-
-				bus->setDeparturePOI(map.findVertex(poi1));
-
-				cout << "\Insetting route points\n";
-
-				vector<Vertex<POI>*> route1;
-
-				POI poi3(122528341);
-				route1.push_back(map.findVertex(poi3));
-
-				POI poi4(311887518);
-				route1.push_back(map.findVertex(poi4));
-
-				POI poi5(311887521);
-				route1.push_back(map.findVertex(poi5));
-
-				POI poi6(428208843);
-				route1.push_back(map.findVertex(poi6));
-
-
-				bus->setRoute(route1);
-
-				buses.push_back(bus);
-			
-				cout << "\nDefining path of bus\n";
-
-
-				defineSlowPathOfBus(1234, &map);*/
-
-				
+							
 				for (int i = 0; i < buses.at(0)->getOptimalPath().size(); i++) {
 
 					cout << "Path node nr: " << i << " " << buses.at(0)->getOptimalPath().at(i).getId() << endl;
@@ -1507,47 +1236,6 @@ int main(){
 
 				defineFastPathOfBus(busId, &map);
 				
-				/*
-				cout << "\nCreated Bus\n";
-
-				Bus* bus = new Bus(1234);
-
-				cout << "\nsetting departure and arrival pois\n";
-
-				POI poi1(111443920);
-
-				POI poi2(480482921);
-
-				bus->setArrivalPOI(map.findVertex(poi2));
-
-				bus->setDeparturePOI(map.findVertex(poi1));
-				
-				cout << "\Insetting route points\n";
-
-				vector<Vertex<POI>*> route1;
-
-				POI poi3(122528341);
-				route1.push_back(map.findVertex(poi3));
-
-				POI poi4(311887518);
-				route1.push_back(map.findVertex(poi4));
-
-				POI poi5(311887521);
-				route1.push_back(map.findVertex(poi5));
-
-				POI poi6(428208843);
-				route1.push_back(map.findVertex(poi6));
-
-
-				bus->setRoute(route1);
-
-				buses.push_back(bus);
-
-				cout << "\nDefining path of bus\n";
-
-
-				defineFastPathOfBus(1234, &map);*/
-
 				for (int i = 0; i < buses.at(0)->getOptimalPath().size(); i++) {
 
 					cout << "Path node nr: " << i << " " << buses.at(0)->getOptimalPath().at(i).getId() << endl;
@@ -1556,27 +1244,27 @@ int main(){
 				}
 
 
-				//viewPath();
-
 			}
 
 			else if (option == 9) {
 
+				viewPath();
+
+			}
+
+			else if (option == 10) {
 
 
-				POI poi1(111443920);
+			cout << "\nWhat percentage (in decimal) of common nodes must a passenger and the route of a \nbus have so that the passenger gets put into that bus? ";
+			cin >> pass_perc;
 
-				POI poi2(480482921);
-
-				poiDistanceDijkstra(poi1, poi2, &map);
-
-
-				//viewPath();
+			cout << "\n\nWhat percentage (in decimal) of passengers must want to visit a node so that the \nnode gets added to the route of the next bus? ";
+			cin >> poi_perc;
 
 
 			}
 
-			else if(option == 10){
+			else if(option == 11){
 				break;
 			}
 
@@ -1600,10 +1288,6 @@ int main(){
 			if (option == 1) {
 	
 				loadMap(&map);
-
-
-				/*string ret[2];
-				parseNodeline("(12345,1234.234)", ret);*/
 
 
 			}
@@ -1660,8 +1344,6 @@ int main(){
 			if (option == 1)
 				addBus();
 
-
-			cout << "BUS: " << buses.at(0)->getId() << endl;
 
 
 			
